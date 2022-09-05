@@ -4,14 +4,17 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
   Code,
   Container,
   Flex,
   Heading,
   Tag,
   TagLabel,
-  Text
+  Text,
+  useColorMode
 } from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 const metodosInstituicao = [
   {
@@ -357,13 +360,22 @@ const metodosTurmaConta = [
   }
 ]
 
-
 export default function Home() {
+
+  const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <Container
       maxW={'6xl'}>
-      <Heading
-        py='10'>Endpoints</Heading>
+      <Flex 
+      justifyContent={'space-between'}
+      align='center'>
+        <Heading
+          py='10'>Endpoints</Heading>
+        <Button onClick={toggleColorMode}>
+          {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+        </Button>
+      </Flex>
       <Flex
         flexDir='column'
         mb='10'>
@@ -489,31 +501,31 @@ export default function Home() {
 
 const Conteudo = ({ titulo, cor, metodo, nome, descricao, body }) => {
   return (
-      <Accordion
-        allowToggle>
-        <AccordionItem>
-          <h2>
-            <AccordionButton>
-              <Flex
-                flex='1'
-                textAlign='left'
-                gap='2'>
-                <Tag
-                  variant='subtle'
-                  colorScheme={cor}>
-                  <TagLabel>{metodo}</TagLabel>
-                </Tag>
-                <Text>{nome}</Text>
-              </Flex>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel pb={4}>
-            {descricao}
-            <br />
-            <Code children={body} />
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+    <Accordion
+      allowToggle>
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Flex
+              flex='1'
+              textAlign='left'
+              gap='2'>
+              <Tag
+                variant='subtle'
+                colorScheme={cor}>
+                <TagLabel>{metodo}</TagLabel>
+              </Tag>
+              <Text>{nome}</Text>
+            </Flex>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          {descricao}
+          <br />
+          <Code children={body} />
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   )
 }
