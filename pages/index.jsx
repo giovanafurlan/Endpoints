@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Button,
-  Code,
   Container,
   Flex,
   Heading,
@@ -22,10 +21,10 @@ const metodosInstituicao = [
     metodo: 'GET',
     cor: 'green',
     descricao: 'Listar Todas as Instituições',
-    body: ''
+    body: JSON.stringify('')
   },
   {
-    nome: '/instituicao/getById?id={id}',
+    nome: '/instituicao/findById?id={id}',
     metodo: 'GET',
     cor: 'green',
     descricao: 'Detalhes da Instituição',
@@ -62,15 +61,8 @@ const metodosInstituicao = [
     metodo: 'DELETE',
     cor: 'red',
     descricao: 'Deletar Instituição',
-    body: ''
-  },
-  {
-    nome: '/conta/oauth?email={email}&senha={senha}',
-    metodo: 'GET',
-    cor: 'green',
-    descricao: 'Autenticação',
-    body: ''
-  },
+    body: JSON.stringify('')
+  }
 ]
 
 const metodosConta = [
@@ -82,7 +74,7 @@ const metodosConta = [
     body: ''
   },
   {
-    nome: '/conta/getById?cdConta={cdConta}',
+    nome: '/conta/findById?cdConta={cdConta}',
     metodo: 'GET',
     cor: 'green',
     descricao: 'Detalhes da Conta',
@@ -100,9 +92,9 @@ const metodosConta = [
       "dsSenha" : "",
       "dsDocumento" : "",
       "dtNascimento" : "",
-      "stConta" : ,
+      "stConta" : boolean,
       "dsTipoConta": ""
-  }`
+    }`
   },
   {
     nome: '/conta/create?cdConta={cdConta}',
@@ -111,13 +103,13 @@ const metodosConta = [
     descricao: 'Atualizar Instituição',
     body: `Body:
     {
-      "cdConta" : ,
+      "cdConta" : int,
       "nmConta" : "",
       "dsEmail" : "",
       "dsSenha" : "",
       "dsDocumento" : "",
       "dtNascimento" : "",
-      "stConta" : ,
+      "stConta" : boolean,
       "dsTipoConta": ""
   }`
   }
@@ -178,13 +170,6 @@ const metodosMateria = [
     body: ''
   },
   {
-    nome: '/materia?cdMateria={cdMateria}',
-    metodo: 'GET',
-    cor: 'green',
-    descricao: 'Detalhes da Matéria',
-    body: ''
-  },
-  {
     nome: '/materia/create',
     metodo: 'POST',
     cor: 'yellow',
@@ -212,6 +197,12 @@ const metodosMateria = [
     cor: 'red',
     descricao: 'Deletar Matéria',
     body: ''
+  },
+  {
+    nome: '/materia/associarMateriaCurso?cdMateria={cdMateria}&cdCurso={cdCurso}',
+    metodo: 'POST',
+    cor: 'yellow',
+    descricao: 'Associar Materia a Curso'
   }
 ]
 
@@ -238,39 +229,22 @@ const metodosCursoMateria = [
     body: `Body:
     {
       "materia": {
-          "cdMateria": ,
+          "cdMateria": int,
           "nmMateria": "",
           "dsMateria": ""
       },
       "curso": {
-          "cdCurso": ,
+          "cdCurso": int,
           "nmCurso": "",
           "nmPeriodo": ""
       }
     }`
   },
   {
-    nome: '/conta/create?cdConta={cdConta}',
-    metodo: 'PUT',
-    cor: 'blue',
-    descricao: 'Atualizar Instituição',
-    body: `Body:
-    {
-      "cdConta" : ,
-      "nmConta" : "",
-      "dsEmail" : "",
-      "dsSenha" : "",
-      "dsDocumento" : "",
-      "dtNascimento" : "",
-      "stConta" : ,
-      "dsTipoConta": ""
-  }`
-  },
-  {
     nome: '/curso/materia/delete?cdCursoMateria={cdCursoMateria}',
     metodo: 'DELETE',
     cor: 'red',
-    descricao: 'Deletar Matéria',
+    descricao: 'Deletar Curso Materia',
     body: ''
   }
 ]
@@ -291,21 +265,26 @@ const metodosTurma = [
     body: ''
   },
   {
-    nome: '/turma/create',
+    nome: '/turma/create?nmTurma={nmTurma}&cdCurso={cdCurso}',
     metodo: 'POST',
     cor: 'yellow',
     descricao: 'Criação de Turma',
-    body: `Body:
-    {
-      "cdTurma": ,
-      "nmTurma": "",
-      "curso": {
-          "cdCurso": ,
-          "nmCurso": "",
-          "nmPeriodo": ""
-      }
-  }`
-  }
+    body: ''
+  },
+  {
+    nome: '/turma/associate?turmaId={turmaId}&contaId={contaId}',
+    metodo: 'POST',
+    cor: 'yellow',
+    descricao: 'Associar Conta com Turma',
+    body: ''
+  },
+  {
+    nome: '/turma/listTurmasByConta?contaId={contaId}',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Listar Turmas por Conta',
+    body: ''
+  },
 ]
 
 const metodosTurmaConta = [
@@ -331,32 +310,103 @@ const metodosTurmaConta = [
     body: `Body:
     {
       "turma": {
-         "cdTurma": ,
+         "cdTurma": int,
          "nmTurma": "",
          "curso": {
-             "cdCurso": ,
+             "cdCurso": int,
              "nmCurso": "",
              "nmPeriodo": ""
          }
      },
      "cdConta": {
-         "cdConta": ,
+         "cdConta": int,
          "nmConta": "",
          "dsEmail": "",
          "dsSenha": "",
          "dsDocumento": "",
          "dtNascimento": "",
-         "stConta": ,
+         "stConta": boolean,
          "dsTipoConta": "",
          "instituicao": {
-             "cdInstituicao": ,
+             "cdInstituicao": int,
              "nmInstituicao": "",
              "nrCnpj": "",
              "dsPlano": "",
              "dsToken": ""
          }
-     }
  }`
+  },
+]
+
+const metodosSala = [
+  {
+    nome: '/sala',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Listar Todas as Salas',
+    body: ''
+  },
+  {
+    nome: '/sala/findById?cdSala={cdSala}',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Detalhes da Sala',
+    body: ''
+  },
+  {
+    nome: '/sala/create?cdConta={cdConta}&cdMateria={cdMateria}',
+    metodo: 'POST',
+    cor: 'yellow',
+    descricao: 'Criação de Sala',
+    body: ''
+  },
+  {
+    nome: '/sala/getByTurma?turmaId={turmaId}',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Listar Sala pelo Código da Turma',
+    body: ''
+  }
+]
+
+const metodosAPIVoice = [
+  {
+    nome: '/apiVoice/health/drive',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Conectar Drive',
+    body: ''
+  },
+  {
+    nome: '/apiVoice/health/zamzar',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Conectar Zamzar',
+    body: ''
+  }
+]
+
+const metodosFeedback = [
+  {
+    nome: '/feedback/list',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Listar todos os Feedback',
+    body: ''
+  },
+  {
+    nome: '/feedback/getBySalaId?salaId={salaId}',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Listar feedback por Código da Sala',
+    body: ''
+  },
+  {
+    nome: '/feedback/create',
+    metodo: 'GET',
+    cor: 'green',
+    descricao: 'Criar feedback',
+    body: ''
   }
 ]
 
@@ -495,11 +545,62 @@ export default function Home() {
             metodo={metodo.metodo} />
         ))}
       </Flex>
+      <Flex
+        flexDir='column'
+        mb='10'>
+        <Heading
+          as={'h2'}
+          fontSize='2xl'
+          mb='4'>Sala</Heading>
+        {metodosSala.map((metodo, idx) => (
+          <Conteudo
+            key={idx}
+            nome={metodo.nome}
+            cor={metodo.cor}
+            descricao={metodo.descricao}
+            body={metodo.body}
+            metodo={metodo.metodo} />
+        ))}
+      </Flex>
+      <Flex
+        flexDir='column'
+        mb='10'>
+        <Heading
+          as={'h2'}
+          fontSize='2xl'
+          mb='4'>API Voice</Heading>
+        {metodosAPIVoice.map((metodo, idx) => (
+          <Conteudo
+            key={idx}
+            nome={metodo.nome}
+            cor={metodo.cor}
+            descricao={metodo.descricao}
+            body={metodo.body}
+            metodo={metodo.metodo} />
+        ))}
+      </Flex>
+      <Flex
+        flexDir='column'
+        mb='10'>
+        <Heading
+          as={'h2'}
+          fontSize='2xl'
+          mb='4'>Feedback</Heading>
+        {metodosFeedback.map((metodo, idx) => (
+          <Conteudo
+            key={idx}
+            nome={metodo.nome}
+            cor={metodo.cor}
+            descricao={metodo.descricao}
+            body={metodo.body}
+            metodo={metodo.metodo} />
+        ))}
+      </Flex>
     </Container>
   )
 }
 
-const Conteudo = ({ titulo, cor, metodo, nome, descricao, body }) => {
+const Conteudo = ({ cor, metodo, nome, descricao, body }) => {
   return (
     <Accordion
       allowToggle>
@@ -523,7 +624,7 @@ const Conteudo = ({ titulo, cor, metodo, nome, descricao, body }) => {
         <AccordionPanel pb={4}>
           {descricao}
           <br />
-          <Code children={body} />
+          <pre>{body}</pre>
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
